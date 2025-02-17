@@ -2,18 +2,18 @@ from abc import abstractmethod, ABC
 
 
 class Validator(ABC):
-    def __set_name__(self, owner, name) -> None:
+    def __set_name__(self, owner: type, name: str) -> None:
         self.protected_name = "_" + name
 
-    def __get__(self, instance: object, owner) -> int:
+    def __get__(self, instance: object, owner: type) -> int:
         return getattr(instance, self.protected_name)
 
-    def __set__(self, instance: object, value) -> None:
+    def __set__(self, instance: object, value: int) -> None:
         self.validate(value)
         setattr(instance, self.protected_name, value)
 
     @abstractmethod
-    def validate(self, value) -> None:
+    def validate(self, value: int) -> None:
         pass
 
 
@@ -35,7 +35,7 @@ class OneOf(Validator):
     def __init__(self, *options) -> None:
         self.options = options
 
-    def validate(self, value) -> None:
+    def validate(self, value: object) -> None:
         if value not in self.options:
             raise ValueError(f"Expected {value} to be one of {self.options}.")
 
